@@ -17,7 +17,8 @@ function Import-SLStudents {
         [Parameter(Mandatory = $true)]
         [int]$ImportType,
         [Parameter(Mandatory = $true)]
-        [int]$UsernamePattern
+        [int]$UsernamePattern,
+        [string[]]$IgnoreGroups
     )
     
     Write-Debug "Loading CSV...";
@@ -26,7 +27,7 @@ function Import-SLStudents {
     Test-SLCsv $Csv
     $Csv = $Csv | Select-Object *,Password,Status,Alias,UserPrincipalName
     Write-Debug "Loading all AD users...";
-    $adUsers = Get-ADUser -SearchBase $UserOU -Filter * -ResultSetSize 5000
+    $adUsers = Get-ADUser -SearchBase $UserOU -Filter * -ResultSetSize 5000 -Properties MemberOf
     
     $adUserGroup = Get-ADGroup $UserGroup
     
@@ -44,8 +45,15 @@ function Import-SLStudents {
             if ($firstMatch) {
                 Write-Debug "Removing user $($firstMatch.UserPrincipalName) from all groups...";
 
-                Get-ADUser -Identity $firstMatch -Properties MemberOf | ForEach-Object {
-                    $_.MemberOf | Remove-ADGroupMember -Members $_.DistinguishedName -Confirm:$false
+                $firstMatch.MemberOf | ForEach-Object {
+                    $adGroup = Get-ADGroup $_
+                    if ($IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
+                        Write-Debug "Removing user $($firstMatch.UserPrincipalName) from group $($adGroup.SamAccountName)";
+                        Remove-ADGroupMember -Identity $adGroup -Members $_.DistinguishedName -Confirm:$false
+                    }
+                    else {
+                        Write-Debug "Skipping user $($firstMatch.UserPrincipalName) for removing from group $($adGroup.SamAccountName)";
+                    }
                 }
             }
 
@@ -176,4 +184,5 @@ Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.cs
     -ImportType 1 `
     -UserOU "OU=Students,OU=Users,OU=School,DC=ad,DC=spsautocb,DC=cz" `
     -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=spsautocb,DC=cz" `
-    -UsernamePattern 1
+    -UsernamePattern 1 `
+    -IgnoreGroups @{}
