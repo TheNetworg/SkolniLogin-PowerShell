@@ -51,6 +51,8 @@ Accepts an array of *SamAccountNames* of groups which the user should never be r
 
 ## Username Patterns
 Currently only a single pattern is available, demonstrated on example: *Jméno Příjmení*
+
+In case the user's name is *First First2 Surname Surname2* online *First* and *Surname2* are used - first part of *GivenName* and last part of *Surname* separated by space.
 ### Value: 1
 1. PrijmeniJme0
 1. PrijmeniJme1

@@ -76,7 +76,9 @@ function New-SLStudentUsername {
     )
 
     $GivenName = ($GivenName.Normalize("FormD") -replace '\p{M}', '').Trim()
+    $GivenName = $GivenName.Split(" ")[0]
     $Surname = ($Surname.Normalize("FormD") -replace '\p{M}', '').Trim()
+    $Surname = $Surname.Split(" ")[-1]
 
     $alias = "";
     $i = 0;
