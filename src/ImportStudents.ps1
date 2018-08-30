@@ -1,5 +1,5 @@
-﻿. ".\Students.ps1"
-. ".\Classes.ps1"
+﻿. .\Students.ps1
+. .\Classes.ps1
 function Import-SLStudents {
     param (
         [Parameter(Mandatory = $true)]
@@ -176,13 +176,13 @@ function Test-SLCsv {
     }
 }
 
-$DebugPreference = "Continue"
-Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.csv" `
-    -CurrentYear 2018 `
-    -Domain "spsautocb.cz" `
-    -UserGroup "All Students" `
-    -ImportType 1 `
-    -UserOU "OU=Students,OU=Users,OU=School,DC=ad,DC=spsautocb,DC=cz" `
-    -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=spsautocb,DC=cz" `
-    -UsernamePattern 1 `
-    -IgnoreGroups @{}
+# $DebugPreference = "Continue"
+# Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.csv" `
+#     -CurrentYear 2018 `
+#     -Domain "spsautocb.cz" `
+#     -UserGroup "All Students" `
+#     -ImportType 1 `
+#     -UserOU "OU=Students,OU=Users,OU=School,DC=ad,DC=spsautocb,DC=cz" `
+#     -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=spsautocb,DC=cz" `
+#     -UsernamePattern 1 `
+#     -IgnoreGroups @{}

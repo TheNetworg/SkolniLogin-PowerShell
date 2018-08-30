@@ -1,7 +1,18 @@
 # SkolniLogin.cz - PowerShell Provisioning
 The purpose of this module is to automate provisioning of new accounts into Active Directory and its related systems.
 
+## Installing
+1. Download this repository
+1. Import the PowerShell module
+```powershell
+Import-module .\SLPowerShell.psm1
+```
+
+## Teachers / Employees / Other users
+Support will be added in future
+
 ## Students
+Creating students is the very basic task. All students will be put in the same OU specified as the param. Users will not be moved when being updated.
 ```powershell
 Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.csv" `
     -CurrentYear 2018 `
@@ -13,7 +24,6 @@ Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.cs
     -UsernamePattern 1 `
     -IgnoreGroups "Domain Users","Wi-Fi Users"
 ```
-Handling existing group memberships?
 
 ### Parameters
 #### -CurrentYear
