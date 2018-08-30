@@ -81,11 +81,20 @@ function New-SLStudentUsername {
     $alias = "";
     $i = 0;
 
+    # PrijmeniJme0, PrijmeniJme1, ...
     if($Pattern -eq 1) {
         $alias = "$Surname$($GivenName.Substring(0, 3))$i";
         while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
             $i++;
             $alias = "$Surname$($GivenName.Substring(0, 3))$i";
+        }
+    }
+    # Jmeno.Prijmeni, Jmeno.Prijmeni.1, ...
+    elseif ($Pattern -eq 2) {
+        $alias = "$GivenName.$Surname";
+        while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
+            $i++;
+            $alias = "$GivenName.$Surname.$i";
         }
     }
 

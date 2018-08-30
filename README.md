@@ -5,7 +5,7 @@ The purpose of this module is to automate provisioning of new accounts into Acti
 1. Download this repository
 1. Import the PowerShell module
 ```powershell
-Import-module .\SLPowerShell.psm1
+Import-Module .\SLPowerShell.psm1
 ```
 
 ## Teachers / Employees / Other users
@@ -54,6 +54,10 @@ Currently only a single pattern is available, demonstrated on example: *Jméno P
 ### Value: 1
 1. PrijmeniJme0
 1. PrijmeniJme1
+1. ...
+### Value: 2
+1. Jmeno.Prijmeni
+1. Jmeno.Prijmeni.1
 1. ...
 
 ## User Matching
