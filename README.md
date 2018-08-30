@@ -70,7 +70,7 @@ User's are matched based on their hash which is built followingly:
 The hash is then stored into *msDS-cloudExtensionAttribute1* in the Active Directory and used for further matching and making changes. This is the reason why it is very crucial to keep the Country, IDType and ID the same for user in each export.
 
 ## Input CSV file
-The file is CSV and has to have following fields:
+File is basically validated with each import, simply for fields existing and being filled out. The file is CSV and has to have following fields:
 ### GivenName
 ### Surname
 ### Class
