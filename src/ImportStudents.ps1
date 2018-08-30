@@ -1,4 +1,4 @@
-﻿. .\Students.ps1
+﻿. .\Users.ps1
 . .\Classes.ps1
 function Import-SLStudents {
     param (

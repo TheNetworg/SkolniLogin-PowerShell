@@ -1,4 +1,4 @@
-﻿. ".\Functions.ps1"
+﻿. .\Functions.ps1
 
 function New-SLUser {
     param (
