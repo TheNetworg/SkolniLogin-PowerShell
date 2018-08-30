@@ -36,7 +36,7 @@ function Import-SLStudents {
         foreach($Row in $Csv) {
             $index = $Csv.IndexOf($Row);
 
-            $user = New-SLStudent -User ([ref]$Row) `
+            $user = New-SLUser -User ([ref]$Row) `
                 -Domain $Domain `
                 -Pattern $UsernamePattern `
                 -Path $UserOU

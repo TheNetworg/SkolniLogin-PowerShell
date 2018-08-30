@@ -1,6 +1,6 @@
 ﻿. ".\Functions.ps1"
 
-function New-SLStudent {
+function New-SLUser {
     param (
         [Parameter(Mandatory = $true)]
         [string]$Domain,
@@ -13,7 +13,7 @@ function New-SLStudent {
     )
 
     if ([string]::IsNullOrEmpty($User.Value.Alias)) {
-        $User.Value.Alias = New-SLStudentUsername -GivenName $User.Value.GivenName -Surname $User.Value.Surname -Pattern $Pattern -Domain $Domain
+        $User.Value.Alias = New-SLUsername -GivenName $User.Value.GivenName -Surname $User.Value.Surname -Pattern $Pattern -Domain $Domain
     }
 
     $UserPrincipalName = "$($User.Value.Alias)@$Domain";
@@ -22,7 +22,7 @@ function New-SLStudent {
         $User.Value.Alias = "user_$($hash.Substring(0, 10))";
     }
 
-    $SLHash = Get-SLStudentHash -Country $User.Value.Country -Type $User.Value.IDType -Value $User.Value.ID
+    $SLHash = Get-SLUserHash -Country $User.Value.Country -Type $User.Value.IDType -Value $User.Value.ID
     
     $adUser = Get-ADUser -Filter "msDS-cloudExtensionAttribute1 -eq '$SLHash'"
     $DisplayName = "$($User.Value.GivenName.Trim()) $($User.Value.Surname.Trim())";
@@ -63,7 +63,7 @@ function New-SLStudent {
 
     return $adUser;
 }
-function New-SLStudentUsername {
+function New-SLUsername {
     param (
         [Parameter(Mandatory = $true)]
         $GivenName,
@@ -102,7 +102,7 @@ function New-SLStudentUsername {
 
     return $alias;
 }
-function Get-SLStudentHash {
+function Get-SLUserHash {
     param (
         [Parameter(Mandatory = $true)]
         $Country,
@@ -116,5 +116,5 @@ function Get-SLStudentHash {
     return "$Country,$Type,$hash"
 }
 
-#Get-SLStudentHash -Country "CZ" -Type "SSN" -Value "1234560000"
-#New-SLStudentUsername "Jáňěček" "Hájěčék" 1
+#Get-SLUserHash -Country "CZ" -Type "SSN" -Value "1234560000"
+#New-SLUsername "Jáňěček" "Hájěčék" 1
