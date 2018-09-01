@@ -1,5 +1,6 @@
-﻿. .\Users.ps1
-. .\Classes.ps1
+﻿. ".\src\Users.ps1"
+. ".\src\Classes.ps1"
+
 function Import-SLStudents {
     param (
         [Parameter(Mandatory = $true)]
@@ -18,6 +19,7 @@ function Import-SLStudents {
         [int]$ImportType,
         [Parameter(Mandatory = $true)]
         [int]$UsernamePattern,
+        [string]$ExtensionAttributeName = "msDS-cloudExtensionAttribute1",
         [string[]]$IgnoreGroups
     )
     
@@ -39,7 +41,8 @@ function Import-SLStudents {
             $user = New-SLUser -User ([ref]$Row) `
                 -Domain $Domain `
                 -Pattern $UsernamePattern `
-                -Path $UserOU
+                -Path $UserOU `
+                -ExtensionAttributeName $ExtensionAttributeName
             
             $firstMatch = $adUsers | Where-Object { $_.SamAccountName -eq $user.SamAccountName };
             if ($firstMatch) {
@@ -121,7 +124,7 @@ function Test-SLCsv {
         'GivenName',
         'Surname',
         'Class',
-        'Country',
+        'IDIssuer',
         'IDType',
         'ID'
     )
@@ -157,12 +160,12 @@ function Test-SLCsv {
         if ([string]::IsNullOrEmpty($Row.$Column)) {
             throw "Invalid value for $Column at line $Row, value: $($Row.$Column)"
         }
-        $Column = 'Country'
-        if (-not ($Row.$Column -eq "CZ")) {
+        $Column = 'IDIssuer'
+        if (-not ($Row.$Column -eq "CZ" -or $Row.$Column -eq "INT")) {
             throw "Invalid value for $Column at line $Row, value: $($Row.$Column)"
         }
         $Column = 'IDType'
-        if (-not ($Row.$Column -eq "BN")) {
+        if (-not ($Row.$Column -eq "BN" -or $Row.$Column -eq "SIN")) {
             throw "Invalid value for $Column at line $Row, value: $($Row.$Column)"
         }
         $Column = 'ID'

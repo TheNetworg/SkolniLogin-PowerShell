@@ -1,4 +1,4 @@
-﻿. .\Functions.ps1
+﻿. ".\src\Functions.ps1"
 
 function New-SLUser {
     param (
@@ -9,7 +9,8 @@ function New-SLUser {
         [Parameter(Mandatory = $true)]
         [int]$Pattern,
         [Parameter(Mandatory = $true)]
-        [string]$Path
+        [string]$Path,
+        [string]$ExtensionAttributeName = "msDS-cloudExtensionAttribute1"
     )
 
     if ([string]::IsNullOrEmpty($User.Value.Alias)) {
@@ -22,9 +23,9 @@ function New-SLUser {
         $User.Value.Alias = "user_$($hash.Substring(0, 10))";
     }
 
-    $SLHash = Get-SLUserHash -Country $User.Value.Country -Type $User.Value.IDType -Value $User.Value.ID
+    $SLHash = Get-SLUserHash -Issuer $User.Value.IDIssuer -Type $User.Value.IDType -Value $User.Value.ID
     
-    $adUser = Get-ADUser -Filter "msDS-cloudExtensionAttribute1 -eq '$SLHash'"
+    $adUser = Get-ADUser -Filter "$ExtensionAttributeName -eq '$SLHash'"
     $DisplayName = "$($User.Value.GivenName.Trim()) $($User.Value.Surname.Trim())";
 
     if($adUser) {
@@ -54,7 +55,7 @@ function New-SLUser {
             -DisplayName $DisplayName `
             -Path $Path `
             -AccountPassword $secureString `
-            -OtherAttributes @{"msDS-cloudExtensionAttribute1" = $SLHash} `
+            -OtherAttributes @{"$ExtensionAttributeName" = $SLHash} `
             -Enabled $true `
             -PassThru
 
@@ -105,7 +106,7 @@ function New-SLUsername {
 function Get-SLUserHash {
     param (
         [Parameter(Mandatory = $true)]
-        $Country,
+        $Issuer,
         [Parameter(Mandatory = $true)]
         $Type,
         [Parameter(Mandatory = $true)]
@@ -113,8 +114,8 @@ function Get-SLUserHash {
     )
 
     $hash = Get-StringHash $Value
-    return "$Country,$Type,$hash"
+    return "$Issuer,$Type,$hash"
 }
 
-#Get-SLUserHash -Country "CZ" -Type "SSN" -Value "1234560000"
+#Get-SLUserHash -IDIssuer "CZ" -Type "SSN" -Value "1234560000"
 #New-SLUsername "Jáňěček" "Hájěčék" 1

@@ -22,7 +22,8 @@ Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.cs
     -UserOU "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
     -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
     -UsernamePattern 1 `
-    -IgnoreGroups "Domain Users","Wi-Fi Users"
+    -IgnoreGroups "Domain Users","Wi-Fi Users" `
+    -ExtensionAttributeName "msDS-cloudExtensionAttribute1"
 ```
 
 ### Parameters
@@ -48,6 +49,8 @@ The organizational units under which the users and groups should be created.
 See Username Patterns section below.
 #### Optional: -IgnoreGroups
 Accepts an array of *SamAccountNames* of groups which the user should never be removed from when using initial import. This is handy if you have some Wi-Fi access groups in Active Directory or something and want the user to stay in those groups.
+#### Optional: -ExtensionAttributeName
+Attribute in Active Directory to be used for storing the SLHash. Defaults to `msDS-cloudExtensionAttribute1` for Windows Server 2012+ schema, but for lower schemas, you should use `extensionAttribute1`.
 
 ## Username Patterns
 Currently only a single pattern is available, demonstrated on example: *Jméno Příjmení*
@@ -65,17 +68,17 @@ In case the user's name is *First First2 Surname Surname2* online *First* and *S
 ## User Matching
 User's are matched based on their hash which is built followingly:
 
-**Country**,**IDType**,**SHA1(ID)**
+**IDIssuer**,**IDType**,**SHA1(ID)**
 
-The hash is then stored into *msDS-cloudExtensionAttribute1* in the Active Directory and used for further matching and making changes. This is the reason why it is very crucial to keep the Country, IDType and ID the same for user in each export.
+The hash is then stored into *msDS-cloudExtensionAttribute1* in the Active Directory and used for further matching and making changes. This is the reason why it is very crucial to keep the IDIssuer, IDType and ID the same for user in each export.
 
 ## Input CSV file
 File is basically validated with each import, simply for fields existing and being filled out. The file is CSV and has to have following fields:
 ### GivenName
 ### Surname
 ### Class
-### Country
-This is the user's nationality, values should be *CZ*, *SK*, *US* etc.
+### IDIssuer
+This is usually the country which issued the ID, either *CZ* or *INT* for ID coming from internal system.
 ### IDType
 User's unique identifier, in the Czech Republic, the birthnumber is used. Values should be *BN*, *SSN* etc.
 ### ID
