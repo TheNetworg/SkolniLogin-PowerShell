@@ -1,6 +1,8 @@
 # SkolniLogin.cz - PowerShell Provisioning
 The purpose of this module is to automate provisioning of new accounts into Active Directory and its related systems.
 
+You can refer here for further information about this problematics: [Best practices for managing students in Active Directory](https://blog.thenetw.org/2018/09/03/best-practices-for-managing-students-in-active-directory/)
+
 ## Installing
 1. Download this repository
 1. Import the PowerShell module
