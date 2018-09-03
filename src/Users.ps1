@@ -23,6 +23,9 @@ function New-SLUser {
         $User.Value.Alias = "user_$($hash.Substring(0, 10))";
     }
 
+    if($User.Value.IDType -eq "BN") {
+        $User.Value.ID = $User.Value.ID.Replace("/", "");
+    }
     $SLHash = Get-SLUserHash -Issuer $User.Value.IDIssuer -Type $User.Value.IDType -Value $User.Value.ID
     
     $adUser = Get-ADUser -Filter "$ExtensionAttributeName -eq '$SLHash'"
