@@ -21,6 +21,7 @@ function Import-SLStudents {
         [int]$UsernamePattern,
         [string]$ExtensionAttributeName = "msDS-cloudExtensionAttribute1",
         [bool]$CleanGroupMembership = $false,
+        [string]$GroupDomain = $Domain,
         [string[]]$IgnoreGroups
     )
     
@@ -70,7 +71,7 @@ function Import-SLStudents {
 
             $class = New-SLClass -Name $Row.Class `
                 -CurrentYear $CurrentYear `
-                -Domain $Domain `
+                -Domain $GroupDomain `
                 -Path $ClassOU
 
             Write-Debug "Adding user $($user.UserPrincipalName) to $($class.SamAccountName) class"
@@ -78,14 +79,12 @@ function Import-SLStudents {
             
             $Csv[$index] = $Row;
         }
-
-        Write-Debug "Active Directory Users Left"
-        foreach($adUser in $adUsers) {
-            Write-Host "Delete $($adUser.UserPrincipalName)"
-            Remove-ADUSer $adUser -Confirm:$true
-        }
+        
         Write-Debug "Storing CSV..."
         $Csv | ConvertTo-Csv -NoTypeInformation | Out-File "$($FilePath)_RESULT.csv"
+
+        Write-Debug "Active Directory users left: $($adUsers.Count)"
+        $adUsers | Remove-ADUSer -Confirm:$true
     }
     elseif ($ImportType -eq 2) {
         Write-Debug "Running update import..."
@@ -105,7 +104,7 @@ function Import-SLStudents {
 
             $class = New-SLClass -Name $Row.Class `
                 -CurrentYear $CurrentYear `
-                -Domain $Domain `
+                -Domain $GroupDomain `
                 -Path $ClassOU
 
             Write-Debug "Adding user $($user.UserPrincipalName) to $($class.SamAccountName) class"

@@ -66,9 +66,9 @@ function New-SLClass {
         Write-Debug "Group $id exists, updating only DisplayName";
         $group | Set-ADGroup -DisplayName $Name
 
-        if ($group.mail) {
+        if ($null -eq $group.mail) {
             $existingGroupWithSameMail = Get-ADGroup -Filter "mail -eq '$($group.name)@$Domain'"
-            if($null -ne $existingGroupWithSameMail) {
+            if($null -eq $existingGroupWithSameMail) {
                 $group | Set-ADGroup -Replace @{mail = "$($group.name)@$Domain"}
             }
         }

@@ -62,6 +62,8 @@ Specifies whether the user should be removed from their existing group membershi
 Accepts an array of *SamAccountNames* of groups which the user should never be removed from when using initial import. This is handy if you have some Wi-Fi access groups in Active Directory or something and want the user to stay in those groups.
 #### Optional: -ExtensionAttributeName
 Attribute in Active Directory to be used for storing the SLHash. Defaults to `msDS-cloudExtensionAttribute1` for Windows Server 2012+ schema, but for lower schemas, you should use `extensionAttribute1`.
+#### Optional: -GroupDomain
+The domain under which the class mail addresses should be created under. If not specified the value of `-Domain` parameter is used.
 
 ## Username Patterns
 Currently only a single pattern is available, demonstrated on example: *Jméno Příjmení*
