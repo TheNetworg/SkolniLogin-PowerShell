@@ -24,6 +24,7 @@ Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.cs
     -UserOU "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
     -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
     -UsernamePattern 1 `
+    -CleanGroupMembership $false,
     -IgnoreGroups "Domain Users","Wi-Fi Users" `
     -ExtensionAttributeName "msDS-cloudExtensionAttribute1"
 ```
