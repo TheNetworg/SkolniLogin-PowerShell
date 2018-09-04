@@ -18,18 +18,23 @@
     $splitted = $Name.Split($separator, [System.StringSplitOptions]::RemoveEmptyEntries);
 
     $parseResult = [int]::TryParse($splitted[0], [ref]$grade)
-    if($parseResult -eq $true) {
+    if ($parseResult -eq $true) {
         $year = [int]$CurrentYear - ($grade - 1);
 
         $id = "$($year)-$($splitted[1])";
     }
     else {
-        $characters = $splitted[0].ToCharArray();
+        [System.Collections.ArrayList]$characters = $splitted[0].ToCharArray();
 
-        foreach($char in $characters) {
-            if([char]::IsDigit($char) -eq $true) {
+        foreach ($char in $characters) {
+            if ([char]::IsDigit($char) -eq $true) {
                 $grade = [int]::Parse($char);
-                $characters[$characters.IndexOf($char)] = "X";
+                if ($characters.IndexOf($char) -gt 0) {
+                    $characters[$characters.IndexOf($char)] = "X";
+                }
+                else {
+                    $characters.RemoveAt(0);
+                }
                 break;
             }
         }
@@ -56,10 +61,17 @@ function New-SLClass {
     $id = Get-SLClassId -Name $name -CurrentYear $CurrentYear;
 
     try {
-        $group = Get-ADGroup $id;
+        $group = Get-ADGroup $id -Property mail
 
         Write-Debug "Group $id exists, updating only DisplayName";
         $group | Set-ADGroup -DisplayName $Name
+
+        if ($group.mail) {
+            $existingGroupWithSameMail = Get-ADGroup -Filter "mail -eq '$($group.name)@$Domain'"
+            if($null -ne $existingGroupWithSameMail) {
+                $group | Set-ADGroup -Replace @{mail = "$($group.name)@$Domain"}
+            }
+        }
     }
     catch {
         Write-Debug "Group doesn't exist yet, will create a new one with id: $id";

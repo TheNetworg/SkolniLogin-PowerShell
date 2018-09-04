@@ -27,7 +27,13 @@ Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.cs
     -IgnoreGroups "Domain Users","Wi-Fi Users" `
     -ExtensionAttributeName "msDS-cloudExtensionAttribute1"
 ```
-
+### Classes
+The script is also going to create respective classes - mail-enabled security groups. If an existing class (with same ID) is found - it updates its display name to reflect the current year and also the e-mail address if it is not set and doesn't exist with other group in AD.
+#### Supported class formats
+- 1. A > 2018-A
+- 2.B > 2017-B
+- B2A > 2017-BXA
+- 1A > 2018-A
 ### Parameters
 #### -CurrentYear
 The current school year, for example 2018/2019 means the year will be 2018. This is used when creating class identifiers.
@@ -49,6 +55,8 @@ This allows you to create new students from partial export. None will be removed
 The organizational units under which the users and groups should be created.
 #### -UsernamePattern
 See Username Patterns section below.
+#### Options: -CleanGroupMembership
+Specifies whether the user should be removed from their existing group memberships. Defaults to false, and should be used if you want to clean memberships.
 #### Optional: -IgnoreGroups
 Accepts an array of *SamAccountNames* of groups which the user should never be removed from when using initial import. This is handy if you have some Wi-Fi access groups in Active Directory or something and want the user to stay in those groups.
 #### Optional: -ExtensionAttributeName
@@ -83,6 +91,8 @@ File is basically validated with each import, simply for fields existing and bei
 This is usually the country which issued the ID, either *CZ* or *INT* for ID coming from internal system.
 ### IDType
 User's unique identifier, in the Czech Republic, the birthnumber is used. Values should be *BN*, *SSN* etc.
+#### Birth Number
+If birth number is specified, it is going  to be "sanitized" to format YYYYMMDDXXXX so the `/` will be removed for consistency.
 ### ID
 The ID value itself. Should be ideally only a number, for example *123456000* which is the Czech birth number format.
 ### Optional: Alias

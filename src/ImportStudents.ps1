@@ -20,6 +20,7 @@ function Import-SLStudents {
         [Parameter(Mandatory = $true)]
         [int]$UsernamePattern,
         [string]$ExtensionAttributeName = "msDS-cloudExtensionAttribute1",
+        [bool]$CleanGroupMembership = $false,
         [string[]]$IgnoreGroups
     )
     
@@ -44,18 +45,20 @@ function Import-SLStudents {
                 -Path $UserOU `
                 -ExtensionAttributeName $ExtensionAttributeName
             
-            $firstMatch = $adUsers | Where-Object { $_.SamAccountName -eq $user.SamAccountName };
-            if ($firstMatch) {
-                Write-Debug "Removing user $($firstMatch.UserPrincipalName) from all groups...";
+            if($CleanGroupMembership) {
+                $firstMatch = $adUsers | Where-Object { $_.SamAccountName -eq $user.SamAccountName };
+                if ($firstMatch) {
+                    Write-Debug "Removing user $($firstMatch.UserPrincipalName) from all groups...";
 
-                $firstMatch.MemberOf | ForEach-Object {
-                    $adGroup = Get-ADGroup $_
-                    if ($IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
-                        Write-Debug "Removing user $($firstMatch.UserPrincipalName) from group $($adGroup.SamAccountName)";
-                        Remove-ADGroupMember -Identity $adGroup -Members $_.DistinguishedName -Confirm:$false
-                    }
-                    else {
-                        Write-Debug "Skipping user $($firstMatch.UserPrincipalName) for removing from group $($adGroup.SamAccountName)";
+                    $firstMatch.MemberOf | ForEach-Object {
+                        $adGroup = Get-ADGroup $_
+                        if ($IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
+                            Write-Debug "Removing user $($firstMatch.UserPrincipalName) from group $($adGroup.SamAccountName)";
+                            Remove-ADGroupMember -Identity $adGroup -Members $_.DistinguishedName -Confirm:$false
+                        }
+                        else {
+                            Write-Debug "Skipping user $($firstMatch.UserPrincipalName) for removing from group $($adGroup.SamAccountName)";
+                        }
                     }
                 }
             }
