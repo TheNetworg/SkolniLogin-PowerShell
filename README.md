@@ -66,6 +66,10 @@ In case the user's name is *First First2 Surname Surname2* online *First* and *S
 1. Jmeno.Prijmeni
 1. Jmeno.Prijmeni.1
 1. ...
+### Value: 3
+1. Prijmeni.Jmeno
+1. Prijmeni.Jmeno.1
+1. ...
 
 ## User Matching
 User's are matched based on their hash which is built followingly:
