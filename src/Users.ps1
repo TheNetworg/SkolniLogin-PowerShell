@@ -103,6 +103,14 @@ function New-SLUsername {
             $alias = "$GivenName.$Surname.$i";
         }
     }
+    # Prijmeno.Jmeno, Prijmeno.Jmeno.1, ...
+    elseif ($Pattern -eq 3) {
+        $alias = "$Surname.$GivenName";
+        while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
+            $i++;
+            $alias = "$Surname.$GivenName.$i";
+        }
+    }
 
     return $alias;
 }
