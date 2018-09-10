@@ -26,7 +26,8 @@ Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.cs
     -UsernamePattern 1 `
     -CleanGroupMembership $false,
     -IgnoreGroups "Domain Users","Wi-Fi Users" `
-    -ExtensionAttributeName "msDS-cloudExtensionAttribute1"
+    -ExtensionAttributeName "msDS-cloudExtensionAttribute1" `
+    -GroupDomain "spsautocb.cz"
 ```
 ### Classes
 The script is also going to create respective classes - mail-enabled security groups. If an existing class (with same ID) is found - it updates its display name to reflect the current year and also the e-mail address if it is not set and doesn't exist with other group in AD.
