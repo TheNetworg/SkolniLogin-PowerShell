@@ -24,7 +24,7 @@ Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.cs
     -UserOU "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
     -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
     -UsernamePattern 1 `
-    -CleanGroupMembership $false,
+    -CleanGroupMembership $false `
     -IgnoreGroups "Domain Users","Wi-Fi Users" `
     -ExtensionAttributeName "msDS-cloudExtensionAttribute1" `
     -GroupDomain "skola.cz"
@@ -113,6 +113,27 @@ This script outputs the same values like in the input, however adds the followin
 Username for logging into Office 365, computers, etc.
 ### Alias
 The alias can be used for logging into computers as well, in case the user's alias is longer than 19 characters (which is the maximum value accepted by Active Directory), their alias will be *user_hash* so they should be using their UPN for logging in instead.
+
+## Home Drives
+Sets and creates user's Home Drive assigned to a letter. This is mostly for legacy cases, OneDrive for Business should be used instead.
+```powershell
+Get-ADUser -Filter * | New-SLHomeDrive `
+    -Path "\\ad.skola.cz\storage\drives\{username}" `
+    -Letter "O" `
+    -Force $false
+```
+The path supports placeholders *username* = *sAMAccountName*, *strippedUpn* which is the username part of the UPN. If user has an existing homedrive, you can override it by using the `Force` parameter.
+
+The folder is going to automatically inherit permissions so that the user is owner and has full access + the permissions from top folders apply as well. The path sub-tree will be created if the folders don't exist.
+
+If you want to create homedrives per class, you may want to do something like this:
+```powershell
+$groups = Get-ADGroup -SearchBase "OU=Groups,OU=Uzivatele,DC=ad,DC=skola,DC=cz" -Filter *
+foreach($group in $groups) {
+    $users = Get-ADGroupMember -Identity $group.Name
+    $users | New-SLHomeDrive -Path "\\ad.skola.cz\storage\drives\studenti\$($group.Name)\{strippedUpn}" -Letter "O"
+}
+```
 
 ## Debugging
 In order to see the output of the script, you have to enable debug output first. Errors will be written to stderr like usual.
