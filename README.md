@@ -7,7 +7,7 @@ You can refer here for further information about this problematics: [Best practi
 1. Download this repository
 1. Import the PowerShell module
 ```powershell
-Import-Module .\SLPowerShell.psm1
+Import-Module .\SkolniLogin.psm1
 ```
 
 ## Teachers / Employees / Other users
@@ -27,7 +27,7 @@ Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.cs
     -CleanGroupMembership $false,
     -IgnoreGroups "Domain Users","Wi-Fi Users" `
     -ExtensionAttributeName "msDS-cloudExtensionAttribute1" `
-    -GroupDomain "spsautocb.cz"
+    -GroupDomain "skola.cz"
 ```
 ### Classes
 The script is also going to create respective classes - mail-enabled security groups. If an existing class (with same ID) is found - it updates its display name to reflect the current year and also the e-mail address if it is not set and doesn't exist with other group in AD.
