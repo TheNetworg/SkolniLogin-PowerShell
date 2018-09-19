@@ -32,10 +32,10 @@ Import-SolniLoginStudents -FilePath "C:\Users\Administrator\Desktop\students\stu
 ### Classes
 The script is also going to create respective classes - mail-enabled security groups. If an existing class (with same ID) is found - it updates its display name to reflect the current year and also the e-mail address if it is not set and doesn't exist with other group in AD.
 #### Supported class formats
-- 1. A > 2018-A
-- 2.B > 2017-B
-- B2A > 2017-BXA
-- 1A > 2018-A
+- `1. A` > `2018-A`
+- `2.B` > `2017-B`
+- `B2A` > `2017-BXA`
+- `1A` > `2018-A`
 ### Parameters
 #### -CurrentYear
 The current school year, for example 2018/2019 means the year will be 2018. This is used when creating class identifiers.
