@@ -1,4 +1,4 @@
-﻿function Get-SLClassId {
+﻿function Get-SkolniLoginClassId {
     param (
         [Parameter(Mandatory = $true)]
         $Name,
@@ -45,7 +45,7 @@
     
     return $id;
 }
-function New-SLClass {
+function New-SkolniLoginClass {
     param (
         [Parameter(Mandatory = $true)]
         $Name,
@@ -58,7 +58,7 @@ function New-SLClass {
     )
 
     $group = "";
-    $id = Get-SLClassId -Name $name -CurrentYear $CurrentYear;
+    $id = Get-SkolniLoginClassId -Name $name -CurrentYear $CurrentYear;
 
     try {
         $group = Get-ADGroup $id -Property mail

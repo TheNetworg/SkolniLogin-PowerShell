@@ -1,7 +1,7 @@
 ﻿. ".\src\Users.ps1"
 . ".\src\Classes.ps1"
 
-function Import-SLStudents {
+function Import-SkolniLoginStudents {
     param (
         [Parameter(Mandatory = $true)]
         [string]$FilePath,
@@ -28,7 +28,7 @@ function Import-SLStudents {
     Write-Debug "Loading CSV...";
     $Csv = Import-Csv $FilePath
     Write-Debug "Testing CSV for valid values...";
-    Test-SLCsv $Csv
+    Test-SkolniLoginCsv $Csv
     $Csv = $Csv | Select-Object *,Password,Status,Alias,UserPrincipalName
     Write-Debug "Loading all AD users...";
     $adUsers = Get-ADUser -SearchBase $UserOU -Filter * -ResultSetSize 5000 -Properties MemberOf
@@ -40,7 +40,7 @@ function Import-SLStudents {
         foreach($Row in $Csv) {
             $index = $Csv.IndexOf($Row);
 
-            $user = New-SLUser -User ([ref]$Row) `
+            $user = New-SkolniLoginUser -User ([ref]$Row) `
                 -Domain $Domain `
                 -Pattern $UsernamePattern `
                 -Path $UserOU `
@@ -69,7 +69,7 @@ function Import-SLStudents {
 
             $adUsers = $adUsers | Where-Object { $_.SamAccountName -ne $user.SamAccountName };
 
-            $class = New-SLClass -Name $Row.Class `
+            $class = New-SkolniLoginClass -Name $Row.Class `
                 -CurrentYear $CurrentYear `
                 -Domain $GroupDomain `
                 -Path $ClassOU
@@ -92,7 +92,7 @@ function Import-SLStudents {
         foreach ($Row in $Csv) {
             $index = $Csv.IndexOf($Row);
 
-            $user = New-SLStudent -User ([ref]$Row) `
+            $user = New-SkolniLoginStudent -User ([ref]$Row) `
                 -Domain $Domain `
                 -Pattern $UsernamePattern `
                 -Path $UserOU
@@ -102,7 +102,7 @@ function Import-SLStudents {
 
             $adUsers = $adUsers | Where-Object { $_.SamAccountName -ne $user.SamAccountName };
 
-            $class = New-SLClass -Name $Row.Class `
+            $class = New-SkolniLoginClass -Name $Row.Class `
                 -CurrentYear $CurrentYear `
                 -Domain $GroupDomain `
                 -Path $ClassOU
@@ -117,7 +117,7 @@ function Import-SLStudents {
         $Csv | ConvertTo-Csv -NoTypeInformation | Out-File "$($FilePath)_RESULT.csv"
     }
 }
-function Test-SLCsv {
+function Test-SkolniLoginCsv {
     param (
         $Csv
     )

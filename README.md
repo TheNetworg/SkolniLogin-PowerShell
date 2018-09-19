@@ -16,7 +16,7 @@ Support will be added in future
 ## Students
 Creating students is the very basic task. All students will be put in the same OU specified as the param. Users will not be moved when being updated.
 ```powershell
-Import-SLStudents -FilePath "C:\Users\Administrator\Desktop\students\students.csv" `
+Import-SolniLoginStudents -FilePath "C:\Users\Administrator\Desktop\students\students.csv" `
     -CurrentYear 2018 `
     -Domain "student.skola.cz" `
     -UserGroup "All Students" `
@@ -117,7 +117,7 @@ The alias can be used for logging into computers as well, in case the user's ali
 ## Home Drives
 Sets and creates user's Home Drive assigned to a letter. This is mostly for legacy cases, OneDrive for Business should be used instead.
 ```powershell
-Get-ADUser -Filter * | New-SLHomeDrive `
+Get-ADUser -Filter * | New-SkolniLoginHomeDrive `
     -Path "\\ad.skola.cz\storage\drives\{username}" `
     -Letter "O" `
     -Force $false
@@ -131,7 +131,7 @@ If you want to create homedrives per class, you may want to do something like th
 $groups = Get-ADGroup -SearchBase "OU=Groups,OU=Uzivatele,DC=ad,DC=skola,DC=cz" -Filter *
 foreach($group in $groups) {
     $users = Get-ADGroupMember -Identity $group.Name
-    $users | New-SLHomeDrive -Path "\\ad.skola.cz\storage\drives\studenti\$($group.Name)\{strippedUpn}" -Letter "O"
+    $users | New-SkolniLoginHomeDrive -Path "\\ad.skola.cz\storage\drives\studenti\$($group.Name)\{strippedUpn}" -Letter "O"
 }
 ```
 

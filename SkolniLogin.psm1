@@ -2,6 +2,6 @@
 . .\src\ImportUsers.ps1
 . .\src\CreateHomeDrives.ps1
 
-Export-ModuleMember -Function Import-SLStudents
-Export-ModuleMember -Function Import-SLUsers
-Export-ModuleMember -Function New-SLHomeDrive
+Export-ModuleMember -Function Import-SkolniLoginStudents
+Export-ModuleMember -Function Import-SkolniLoginUsers
+Export-ModuleMember -Function New-SkolniLoginHomeDrive

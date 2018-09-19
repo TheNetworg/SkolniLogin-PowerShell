@@ -1,4 +1,4 @@
-function New-SLHomeDrive {
+function New-SkolniLoginHomeDrive {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline, Mandatory = $true)]

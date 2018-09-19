@@ -1,4 +1,4 @@
-function Import-SLUsers {
+function Import-SkolniLoginUsers {
     param (
         [Parameter(Mandatory = $true)]
         [string]$FilePath,

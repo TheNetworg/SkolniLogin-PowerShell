@@ -1,6 +1,6 @@
 ﻿. ".\src\Functions.ps1"
 
-function New-SLUser {
+function New-SkolniLoginUser {
     param (
         [Parameter(Mandatory = $true)]
         [string]$Domain,
@@ -14,7 +14,7 @@ function New-SLUser {
     )
 
     if ([string]::IsNullOrEmpty($User.Value.Alias)) {
-        $User.Value.Alias = New-SLUsername -GivenName $User.Value.GivenName -Surname $User.Value.Surname -Pattern $Pattern -Domain $Domain
+        $User.Value.Alias = New-SolniLoginUsername -GivenName $User.Value.GivenName -Surname $User.Value.Surname -Pattern $Pattern -Domain $Domain
     }
 
     $UserPrincipalName = "$($User.Value.Alias)@$Domain";
@@ -26,7 +26,7 @@ function New-SLUser {
     if($User.Value.IDType -eq "BN") {
         $User.Value.ID = $User.Value.ID.Replace("/", "");
     }
-    $SLHash = Get-SLUserHash -Issuer $User.Value.IDIssuer -Type $User.Value.IDType -Value $User.Value.ID
+    $SLHash = Get-SkolniLoginUserHash -Issuer $User.Value.IDIssuer -Type $User.Value.IDType -Value $User.Value.ID
     
     $adUser = Get-ADUser -Filter "$ExtensionAttributeName -eq '$SLHash'"
     $DisplayName = "$($User.Value.GivenName.Trim()) $($User.Value.Surname.Trim())";
@@ -67,7 +67,7 @@ function New-SLUser {
 
     return $adUser;
 }
-function New-SLUsername {
+function New-SkolniLoginUsername {
     param (
         [Parameter(Mandatory = $true)]
         $GivenName,
@@ -114,7 +114,7 @@ function New-SLUsername {
 
     return $alias;
 }
-function Get-SLUserHash {
+function Get-SkolniLoginUserHash {
     param (
         [Parameter(Mandatory = $true)]
         $Issuer,
@@ -127,6 +127,3 @@ function Get-SLUserHash {
     $hash = Get-StringHash $Value
     return "$Issuer,$Type,$hash"
 }
-
-#Get-SLUserHash -IDIssuer "CZ" -Type "SSN" -Value "1234560000"
-#New-SLUsername "Jáňěček" "Hájěčék" 1
