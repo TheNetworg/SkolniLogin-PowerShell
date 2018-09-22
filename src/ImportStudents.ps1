@@ -21,6 +21,7 @@ function Import-SkolniLoginStudents {
         [int]$UsernamePattern,
         [string]$ExtensionAttributeName = "msDS-cloudExtensionAttribute1",
         [bool]$CleanGroupMembership = $false,
+        [bool]$CleanGroupMembershipOnlyFromClassOU = $true,
         [string]$GroupDomain = $Domain,
         [string[]]$IgnoreGroups
     )
@@ -28,7 +29,7 @@ function Import-SkolniLoginStudents {
     Write-Debug "Loading CSV...";
     $Csv = Import-Csv $FilePath
     Write-Debug "Testing CSV for valid values...";
-    Test-SkolniLoginCsv $Csv
+    Test-SkolniLoginStudentCsv $Csv
     $Csv = $Csv | Select-Object *,Password,Status,Alias,UserPrincipalName
     Write-Debug "Loading all AD users...";
     $adUsers = Get-ADUser -SearchBase $UserOU -Filter * -ResultSetSize 5000 -Properties MemberOf
@@ -49,16 +50,31 @@ function Import-SkolniLoginStudents {
             if($CleanGroupMembership) {
                 $firstMatch = $adUsers | Where-Object { $_.SamAccountName -eq $user.SamAccountName };
                 if ($firstMatch) {
-                    Write-Debug "Removing user $($firstMatch.UserPrincipalName) from all groups...";
-
-                    $firstMatch.MemberOf | ForEach-Object {
-                        $adGroup = Get-ADGroup $_
-                        if ($IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
-                            Write-Debug "Removing user $($firstMatch.UserPrincipalName) from group $($adGroup.SamAccountName)";
-                            Remove-ADGroupMember -Identity $adGroup -Members $_.DistinguishedName -Confirm:$false
+                    if($CleanGroupMembershipOnlyFromClassOU) {
+                        Write-Debug "Removing user $($firstMatch.UserPrincipalName) only from groups in $ClassOU...";
+                        $firstMatch.MemberOf | ForEach-Object {
+                            $adGroup = Get-ADGroup $_
+                            if ($adGroup.DistinguishedName -like "*$ClassOU" -and $IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
+                                Write-Debug "Removing user $($firstMatch.UserPrincipalName) from group $($adGroup.SamAccountName)";
+                                Remove-ADGroupMember -Identity $adGroup -Members $_.DistinguishedName -Confirm:$false
+                            }
+                            else {
+                                Write-Debug "Skipping user $($firstMatch.UserPrincipalName) for removing from group $($adGroup.SamAccountName)";
+                            }
                         }
-                        else {
-                            Write-Debug "Skipping user $($firstMatch.UserPrincipalName) for removing from group $($adGroup.SamAccountName)";
+                    }
+                    else {
+                        Write-Debug "Removing user $($firstMatch.UserPrincipalName) from all groups...";
+
+                        $firstMatch.MemberOf | ForEach-Object {
+                            $adGroup = Get-ADGroup $_
+                            if ($IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
+                                Write-Debug "Removing user $($firstMatch.UserPrincipalName) from group $($adGroup.SamAccountName)";
+                                Remove-ADGroupMember -Identity $adGroup -Members $_.DistinguishedName -Confirm:$false
+                            }
+                            else {
+                                Write-Debug "Skipping user $($firstMatch.UserPrincipalName) for removing from group $($adGroup.SamAccountName)";
+                            }
                         }
                     }
                 }
@@ -117,7 +133,7 @@ function Import-SkolniLoginStudents {
         $Csv | ConvertTo-Csv -NoTypeInformation | Out-File "$($FilePath)_RESULT.csv"
     }
 }
-function Test-SkolniLoginCsv {
+function Test-SkolniLoginStudentCsv {
     param (
         $Csv
     )

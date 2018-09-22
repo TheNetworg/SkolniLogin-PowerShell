@@ -25,6 +25,7 @@ Import-SolniLoginStudents -FilePath "C:\Users\Administrator\Desktop\students\stu
     -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
     -UsernamePattern 1 `
     -CleanGroupMembership $false `
+    -CleanGroupMembershipOnlyFromClassOU $true `
     -IgnoreGroups "Domain Users","Wi-Fi Users" `
     -ExtensionAttributeName "msDS-cloudExtensionAttribute1" `
     -GroupDomain "skola.cz"
@@ -57,8 +58,10 @@ This allows you to create new students from partial export. None will be removed
 The organizational units under which the users and groups should be created.
 #### -UsernamePattern
 See Username Patterns section below.
-#### Options: -CleanGroupMembership
+#### Optional: -CleanGroupMembership
 Specifies whether the user should be removed from their existing group memberships. Defaults to false, and should be used if you want to clean memberships.
+#### Optional: -CleanGroupMembershipOnlyFromClassOU
+User will be removed only from groups in specified OU. This is good if you want to keep the user in other security groups - for Wi-Fi users etc.
 #### Optional: -IgnoreGroups
 Accepts an array of *SamAccountNames* of groups which the user should never be removed from when using initial import. This is handy if you have some Wi-Fi access groups in Active Directory or something and want the user to stay in those groups.
 #### Optional: -ExtensionAttributeName
