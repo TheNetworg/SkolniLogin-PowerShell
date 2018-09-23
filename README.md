@@ -16,7 +16,7 @@ Support will be added in future
 ## Students
 Creating students is the very basic task. All students will be put in the same OU specified as the param. Users will not be moved when being updated.
 ```powershell
-Import-SolniLoginStudents -FilePath "C:\Users\Administrator\Desktop\students\students.csv" `
+Import-SkolniLoginStudents -FilePath "C:\Users\Administrator\Desktop\students\students.csv" `
     -CurrentYear 2018 `
     -Domain "student.skola.cz" `
     -UserGroup "All Students" `

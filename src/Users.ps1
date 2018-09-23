@@ -14,7 +14,7 @@ function New-SkolniLoginUser {
     )
 
     if ([string]::IsNullOrEmpty($User.Value.Alias)) {
-        $User.Value.Alias = New-SolniLoginUsername -GivenName $User.Value.GivenName -Surname $User.Value.Surname -Pattern $Pattern -Domain $Domain
+        $User.Value.Alias = New-SkolniLoginUsername -GivenName $User.Value.GivenName -Surname $User.Value.Surname -Pattern $Pattern -Domain $Domain
     }
 
     $UserPrincipalName = "$($User.Value.Alias)@$Domain";
