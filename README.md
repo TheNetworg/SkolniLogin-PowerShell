@@ -138,6 +138,18 @@ foreach($group in $groups) {
 }
 ```
 
+## Append Current Class to Display Name
+Useful for adding class information for each user:
+```powershell
+$students = Get-ADUser -Filter * -SearchBase "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz"
+foreach($student in $students) {
+    $student | Set-SkolniLoginClassToDisplayName `
+        -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
+        -IgnoreGroups "All Students"
+}
+```
+Only class with the lowest year for each student is displayed, example: if a user John Doe is member of 2017-A and 2018-A, only class 2017-A will be displayed as `John Doe (2.A)`. This command should be run every year to reflect current class changes. If the user has existing display name which contains ` (` the first part will be used as display name and the second will be replaced with the current class.
+
 ## Debugging
 In order to see the output of the script, you have to enable debug output first. Errors will be written to stderr like usual.
 ```powershell
