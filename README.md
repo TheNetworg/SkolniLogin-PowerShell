@@ -4,6 +4,16 @@ The purpose of this module is to automate provisioning of new accounts into Acti
 You can refer here for further information about this problematics: [Best practices for managing students in Active Directory](https://blog.thenetw.org/2018/09/03/best-practices-for-managing-students-in-active-directory/)
 
 ## Installing
+### PowerShell Gallery
+You should use this option to install the latest stable version of this module.
+```powershell
+Install-Module -Name SkolniLogin
+```
+You can also update the module:
+```powershell
+Update-Module -Name SkolniLogin
+```
+### Manual installation (DEV)
 1. Download this repository
 1. Import the PowerShell module
 ```powershell
