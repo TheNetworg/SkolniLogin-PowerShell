@@ -38,7 +38,12 @@ function Set-SkolniLoginClassToDisplayName {
 
         if($lowest) {
             $displayName = $adUser.DisplayName
-            $withoutClass = $displayName.Split(" (")[0]
+            try {
+                $withoutClass = ($displayName -split " \(")[0]
+            }
+            catch {
+                $withoutClass = $displayName
+            }
             Write-Debug "DisplayName set for $($User.sAMAccountName) to $withoutClass ($($lowest.DisplayName))"
             $adUser | Set-ADUser -DisplayName "$withoutClass ($($lowest.DisplayName))"
         }
