@@ -5,7 +5,7 @@ function Set-SkolniLoginClassToDisplayName {
         $User,
         [Parameter(Mandatory = $true)]
         [string]$ClassOU,
-        [string[]]$IgnoreGroups
+        [string[]]$IgnoreGroups = @()
     )
     process {
         Write-Debug "Setting display name for $($User.sAMAccountName)"

@@ -23,7 +23,7 @@ function Import-SkolniLoginStudents {
         [bool]$CleanGroupMembership = $false,
         [bool]$CleanGroupMembershipOnlyFromClassOU = $true,
         [string]$GroupDomain = $Domain,
-        [string[]]$IgnoreGroups
+        [string[]]$IgnoreGroups = @()
     )
     
     Write-Debug "Loading CSV...";

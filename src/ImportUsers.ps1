@@ -15,7 +15,7 @@ function Import-SkolniLoginUsers {
         [string]$ExtensionAttributeName = "msDS-cloudExtensionAttribute1",
         [bool]$CleanGroupMembership = $false,
         [string]$GroupDomain = $Domain,
-        [string[]]$IgnoreGroups
+        [string[]]$IgnoreGroups = @()
     )
     
 }
