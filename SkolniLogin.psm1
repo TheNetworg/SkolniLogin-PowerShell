@@ -1,7 +1,9 @@
-. .\src\ImportStudents.ps1
-. .\src\ImportUsers.ps1
-. .\src\CreateHomeDrives.ps1
-. .\src\ClassToDisplayname.ps1
+$thisDirectory = (Split-Path -parent $MyInvocation.MyCommand.Definition)
+
+Get-Item $thisDirectory\src\*.ps1 |
+    ForEach-Object {
+	  . $_.FullName;
+    }
 
 Export-ModuleMember -Function Import-SkolniLoginStudents
 Export-ModuleMember -Function Import-SkolniLoginUsers

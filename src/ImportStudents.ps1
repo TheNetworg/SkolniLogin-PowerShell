@@ -1,7 +1,4 @@
-﻿. ".\src\Users.ps1"
-. ".\src\Classes.ps1"
-
-function Import-SkolniLoginStudents {
+﻿function Import-SkolniLoginStudents {
     param (
         [Parameter(Mandatory = $true)]
         [string]$FilePath,

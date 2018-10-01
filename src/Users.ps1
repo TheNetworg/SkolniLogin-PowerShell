@@ -1,6 +1,4 @@
-﻿. ".\src\Functions.ps1"
-
-function New-SkolniLoginUser {
+﻿function New-SkolniLoginUser {
     param (
         [Parameter(Mandatory = $true)]
         [string]$Domain,
