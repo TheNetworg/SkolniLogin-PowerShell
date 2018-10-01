@@ -90,7 +90,11 @@ function New-SkolniLoginUsername {
         $alias = "$Surname$($GivenName.Substring(0, 3))$i";
         while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
             $i++;
-            $alias = "$Surname$($GivenName.Substring(0, 3))$i";
+            $end = 3
+            if($GivenName.Length -lt $end) {
+                $end = $GivenName.Length
+            }
+            $alias = "$Surname$($GivenName.Substring(0, $end))$i";
         }
     }
     # Jmeno.Prijmeni, Jmeno.Prijmeni.1, ...
