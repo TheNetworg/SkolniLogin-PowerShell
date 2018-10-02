@@ -53,7 +53,7 @@
                             $adGroup = Get-ADGroup $_
                             if ($adGroup.DistinguishedName -like "*$ClassOU" -and $IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
                                 Write-Debug "Removing user $($firstMatch.UserPrincipalName) from group $($adGroup.SamAccountName)";
-                                Remove-ADGroupMember -Identity $adGroup -Members $_.DistinguishedName -Confirm:$false
+                                Remove-ADGroupMember -Identity $adGroup -Members $user.DistinguishedName -Confirm:$false
                             }
                             else {
                                 Write-Debug "Skipping user $($firstMatch.UserPrincipalName) for removing from group $($adGroup.SamAccountName)";
@@ -67,7 +67,7 @@
                             $adGroup = Get-ADGroup $_
                             if ($IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
                                 Write-Debug "Removing user $($firstMatch.UserPrincipalName) from group $($adGroup.SamAccountName)";
-                                Remove-ADGroupMember -Identity $adGroup -Members $_.DistinguishedName -Confirm:$false
+                                Remove-ADGroupMember -Identity $adGroup -Members $user.DistinguishedName -Confirm:$false
                             }
                             else {
                                 Write-Debug "Skipping user $($firstMatch.UserPrincipalName) for removing from group $($adGroup.SamAccountName)";
