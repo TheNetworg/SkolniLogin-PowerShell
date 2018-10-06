@@ -17,7 +17,7 @@ function Set-SkolniLoginClassToDisplayName {
         $adUser.MemberOf | ForEach-Object {
             $adGroup = Get-ADGroup $_ -Properties DisplayName
             if ($adGroup.DistinguishedName -like "*$ClassOU" -and $IgnoreGroups.IndexOf($_.SamAccountName) -eq -1) {
-                $candidates.Add($adGroup);
+                $candidates.Add($adGroup) | Out-Null;
             }
         }
 

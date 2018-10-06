@@ -113,6 +113,15 @@ function New-SkolniLoginUsername {
             $alias = "$Surname.$GivenName.$i";
         }
     }
+    # JmenoPrijmeni, JmenoPrijmeni2, ...
+    elseif ($Pattern -eq 4) {
+        $alias = "$GivenName$Surname";
+        $i++;
+        while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
+            $i++;
+            $alias = "$GivenName$Surname.$i";
+        }
+    }
 
     return $alias;
 }
