@@ -119,7 +119,7 @@ function New-SkolniLoginUsername {
         $i++;
         while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
             $i++;
-            $alias = "$GivenName$Surname.$i";
+            $alias = "$GivenName$Surname$i";
         }
     }
 
