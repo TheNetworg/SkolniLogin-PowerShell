@@ -164,6 +164,16 @@ foreach($student in $students) {
 ```
 Only class with the lowest year for each student is displayed, example: if a user John Doe is member of 2017-A and 2018-A, only class 2017-A will be displayed as `John Doe (2.A)`. This command should be run every year to reflect current class changes. If the user has existing display name which contains ` (` the first part will be used as display name and the second will be replaced with the current class.
 
+## Add UPN into Mail attribute
+If you are using Group-based licensing, you might have noticed that the primary mail is not provisioned [according to the documentation](https://support.microsoft.com/en-us/help/3190357/how-the-proxyaddresses-attribute-is-populated-in-azure-ad). In order to fix this, you need to populate the `mail` attribute for each user. In order to simply accomplish this, you can run following:
+```powershell
+$students = Get-ADUser -Filter * -SearchBase "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz"
+foreach($student in $students) {
+    $student | Set-SkolniLoginUpn2Mail
+}
+```
+Please note that any existing value in `mail` attribute will be overwritten. In order to use multiple addresses (for example when changing user's surname in case of marriage and keeping the legacy as well, use `proxyAddresses` attribute).
+
 ## Debugging
 In order to see the output of the script, you have to enable debug output first. Errors will be written to stderr like usual.
 ```powershell
