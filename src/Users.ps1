@@ -87,13 +87,13 @@ function New-SkolniLoginUsername {
 
     # PrijmeniJme0, PrijmeniJme1, ...
     if($Pattern -eq 1) {
-        $alias = "$Surname$($GivenName.Substring(0, 3))$i";
+        $end = 3
+        if($GivenName.Length -lt $end) {
+            $end = $GivenName.Length
+        }
+        $alias = "$Surname$($GivenName.Substring(0, $end))$i";
         while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
             $i++;
-            $end = 3
-            if($GivenName.Length -lt $end) {
-                $end = $GivenName.Length
-            }
             $alias = "$Surname$($GivenName.Substring(0, $end))$i";
         }
     }
