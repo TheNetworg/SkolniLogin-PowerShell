@@ -128,7 +128,7 @@ function New-SkolniLoginUsername {
         if($GivenName.Length -lt $end) {
             $end = $GivenName.Length
         }
-        $alias = "$Surname$($GivenName.Substring(0, $end))$i";
+        $alias = "$Surname$($GivenName.Substring(0, $end))";
         while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
             $i++;
             $alias = "$Surname$($GivenName.Substring(0, $end))$i";
