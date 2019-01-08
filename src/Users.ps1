@@ -122,6 +122,18 @@ function New-SkolniLoginUsername {
             $alias = "$GivenName$Surname$i";
         }
     }
+    # PrijmeniJ, PrijmeniJ1, ...
+    elseif ($Pattern -eq 5) {
+        $end = 1
+        if($GivenName.Length -lt $end) {
+            $end = $GivenName.Length
+        }
+        $alias = "$Surname$($GivenName.Substring(0, $end))$i";
+        while (Get-ADUser -Filter "UserPrincipalName -eq '$alias@$Domain' -or samAccountName -eq '$alias'") {
+            $i++;
+            $alias = "$Surname$($GivenName.Substring(0, $end))$i";
+        }
+    }
 
     return $alias;
 }
