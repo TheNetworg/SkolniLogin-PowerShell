@@ -140,10 +140,10 @@ Sets and creates user's Home Drive assigned to a letter. This is mostly for lega
 ```powershell
 Get-ADUser -Filter * | New-SkolniLoginHomeDrive `
     -Path "\\ad.skola.cz\storage\drives\{username}" `
-    -Letter "O" `
+    -Letter "O:" `
     -Force $false
 ```
-The path supports placeholders *username* = *sAMAccountName*, *strippedUpn* which is the username part of the UPN. If user has an existing homedrive, you can override it by using the `Force` parameter.
+The path supports placeholders *username* = *sAMAccountName*, *strippedUpn* which is the username part of the UPN. If user has an existing homedrive, you can override it by using the `Force` parameter. Do not forget to add `:` behind the letter!
 
 The folder is going to automatically inherit permissions so that the user is owner and has full access + the permissions from top folders apply as well. The path sub-tree will be created if the folders don't exist.
 
