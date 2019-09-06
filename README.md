@@ -184,8 +184,8 @@ This function will go through all selected students and move them to the respect
 $students = Get-ADUser -Filter * -SearchBase "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz"
 foreach($student in $students) {
     $student | Set-SkolniLoginOrganizationalUnitByClass `
-        -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=skola,DC=cz"
-        -IgnoreGroups "All Students"
+        -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=skola,DC=cz" `
+        -IgnoreGroups "All Students" `
         -TargetOU "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz"
 }
 ```
