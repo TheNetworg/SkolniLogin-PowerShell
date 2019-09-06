@@ -178,6 +178,18 @@ foreach($student in $students) {
 ```
 Please note that any existing value in `mail` attribute will be overwritten. In order to use multiple addresses (for example when changing user's surname in case of marriage and keeping the legacy as well, use `proxyAddresses` attribute).
 
+## Sort users into class organizational units
+This function will go through all selected students and move them to the respective organizational units per their class. If the OU doesn't exist, it will get automatically created with the class ID (eg. YEAR-TAG)
+```powershell
+$students = Get-ADUser -Filter * -SearchBase "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz"
+foreach($student in $students) {
+    $student | Set-SkolniLoginOrganizationalUnitByClass `
+        -ClassOU "OU=Classes,OU=Groups,OU=Users,OU=School,DC=ad,DC=skola,DC=cz"
+        -IgnoreGroups "All Students"
+        -TargetOU "OU=Students,OU=Users,OU=School,DC=ad,DC=skola,DC=cz"
+}
+```
+
 ## Debugging
 In order to see the output of the script, you have to enable debug output first. Errors will be written to stderr like usual.
 ```powershell
