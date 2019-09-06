@@ -39,16 +39,17 @@ function Set-SkolniLoginOrganizationalUnitByClass {
         }
 
         if ($lowest -and $null -ne $lowest.DisplayName) {
-            Write-Debug "Found class $($lowest.DisplayName) for user $($User.sAMAccountName)"
+            Write-Debug "Found class $($lowest.sAMAccountName) for user $($User.sAMAccountName)"
 
-            $ou = Get-ADOrganizationalUnit -Identity "OU=$($lowest.SamAccountName),$TargetOU"
-            if($null -eq $ou) {
+            $ou = $null
+            $ou = Get-ADOrganizationalUnit -Identity "OU=$($lowest.SamAccountName),$TargetOU" -ErrorAction SilentlyContinue
+            if ($null -eq $ou) {
                 Write-Debug "Organizational unit OU=$($lowest.SamAccountName),$TargetOU not found, creating..."
-                $ou = New-ADOrganizationalUnit -Name $lowest.DisplayName -Path $TargetOU
+                $ou = New-ADOrganizationalUnit -Name $lowest.SamAccountName -Path $TargetOU
             }
 
-            Write-Debug "Moving user $($User.SamAccountName) to $($ou.DistinguishedName) OU"
-            Move-ADObject -Identity $User.sAMAccountName -TargetPath $ou.DistinguishedName
+            Write-Debug "Moving user $($User.DistinguishedName) to $($ou.DistinguishedName) OU"
+            Move-ADObject -Identity $User.DistinguishedName -TargetPath $ou.DistinguishedName
         }
     }
 }
