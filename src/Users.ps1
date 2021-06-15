@@ -7,6 +7,8 @@
         [Parameter(Mandatory = $true)]
         [int]$Pattern,
         [Parameter(Mandatory = $true)]
+        [int]$DisplayNamePattern,
+        [Parameter(Mandatory = $true)]
         [string]$Path,
         [string]$ExtensionAttributeName = "msDS-cloudExtensionAttribute1"
     )
@@ -27,7 +29,7 @@
     $SLHash = Get-SkolniLoginUserHash -Issuer $User.Value.IDIssuer -Type $User.Value.IDType -Value $User.Value.ID
     
     $adUser = Get-ADUser -Filter "$ExtensionAttributeName -eq '$SLHash'"
-    $DisplayName = "$($User.Value.GivenName.Trim()) $($User.Value.Surname.Trim())";
+    $DisplayName = New-SkolniLoginDisplayName -GivenName $User.Value.GivenName -Surname $User.Value.Surname 
 
     if($adUser) {
         Write-Debug "User already exists, we are going to update them: $($adUser.UserPrincipalName)";
@@ -149,4 +151,32 @@ function Get-SkolniLoginUserHash {
 
     $hash = Get-StringHash $Value
     return "$Issuer,$Type,$hash"
+}
+
+function New-SkolniLoginDisplayName {
+    param (
+        [Parameter(Mandatory = $true)]
+        $GivenName,
+        [Parameter(Mandatory = $true)]
+        $Surname,
+        [Parameter(Mandatory = $true)]
+        $Pattern
+        
+
+    )
+    $DisplayName = ""
+
+    if($Pattern -eq 1)
+    {
+        $DisplayName = "$($GivenName.Trim()) $($Surname.Trim())";
+    }
+    elseif($Pattern -eq 2)
+    {
+        $DisplayName = "$($Surname.Trim()) $($GivenName.Trim())";
+    }
+    elseif($Pattern -eq 3)
+    {
+        $DisplayName = "$($Surname.Trim()), $($GivenName.Trim())";
+    }
+    return $DisplayName
 }

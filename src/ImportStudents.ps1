@@ -20,7 +20,8 @@
         [bool]$CleanGroupMembership = $false,
         [bool]$CleanGroupMembershipOnlyFromClassOU = $true,
         [string]$GroupDomain = $Domain,
-        [string[]]$IgnoreGroups = @()
+        [string[]]$IgnoreGroups = @(),
+        [int]$DisplayNamePattern = 1
     )
     
     Write-Debug "Loading CSV...";
@@ -42,7 +43,8 @@
                 -Domain $Domain `
                 -Pattern $UsernamePattern `
                 -Path $UserOU `
-                -ExtensionAttributeName $ExtensionAttributeName
+                -ExtensionAttributeName $ExtensionAttributeName `
+                -DisplayNamePattern $DisplayNamePattern
             
             if($CleanGroupMembership) {
                 $firstMatch = $adUsers | Where-Object { $_.SamAccountName -eq $user.SamAccountName };

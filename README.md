@@ -38,7 +38,8 @@ Import-SkolniLoginStudents -FilePath "C:\Users\Administrator\Desktop\students\st
     -CleanGroupMembershipOnlyFromClassOU $true `
     -IgnoreGroups "Domain Users","Wi-Fi Users" `
     -ExtensionAttributeName "msDS-cloudExtensionAttribute1" `
-    -GroupDomain "skola.cz"
+    -GroupDomain "skola.cz" `
+    -DisplayNamePattern 1
 ```
 ### Classes
 The script is also going to create respective classes - mail-enabled security groups. If an existing class (with same ID) is found - it updates its display name to reflect the current year and also the e-mail address if it is not set and doesn't exist with other group in AD.
@@ -68,6 +69,8 @@ This allows you to create new students from partial export. None will be removed
 The organizational units under which the users and groups should be created.
 #### -UsernamePattern
 See Username Patterns section below.
+#### -DisplayNamePattern
+See Display Name Patterns section below.
 #### Optional: -CleanGroupMembership
 Specifies whether the user should be removed from their existing group memberships. Defaults to false, and should be used if you want to clean memberships.
 #### Optional: -CleanGroupMembershipOnlyFromClassOU
@@ -103,6 +106,14 @@ In case the user's name is *First First2 Surname Surname2* online *First* and *S
 1. PrijmeniJ
 1. PrijmeniJ1
 1. ...
+
+## Username Patterns
+### Value: 1
+* Jméno Příjmení
+### Value: 2
+* Příjmení Jméno
+### Value: 3
+* Příjmení, Jméno
 
 ## User Matching
 User's are matched based on their hash which is built followingly:
