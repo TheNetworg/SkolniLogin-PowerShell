@@ -107,7 +107,7 @@ In case the user's name is *First First2 Surname Surname2* online *First* and *S
 1. PrijmeniJ1
 1. ...
 
-## Username Patterns
+## DisplayName Patterns
 ### Value: 1
 * Jméno Příjmení
 ### Value: 2

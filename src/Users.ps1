@@ -29,7 +29,7 @@
     $SLHash = Get-SkolniLoginUserHash -Issuer $User.Value.IDIssuer -Type $User.Value.IDType -Value $User.Value.ID
     
     $adUser = Get-ADUser -Filter "$ExtensionAttributeName -eq '$SLHash'"
-    $DisplayName = New-SkolniLoginDisplayName -GivenName $User.Value.GivenName -Surname $User.Value.Surname 
+    $DisplayName = New-SkolniLoginDisplayName -GivenName $User.Value.GivenName -Surname $User.Value.Surname -Pattern $DisplayNamePattern
 
     if($adUser) {
         Write-Debug "User already exists, we are going to update them: $($adUser.UserPrincipalName)";
