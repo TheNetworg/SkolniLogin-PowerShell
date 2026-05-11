@@ -11,3 +11,6 @@ Export-ModuleMember -Function New-SkolniLoginHomeDrive
 Export-ModuleMember -Function Set-SkolniLoginClassToDisplayName
 Export-ModuleMember -Function Set-SkolniLoginUpn2Mail
 Export-ModuleMember -Function Set-SkolniLoginOrganizationalUnitByClass
+Export-ModuleMember -Function New-SkolniLoginEntraUser
+Export-ModuleMember -Function New-SkolniLoginEntraClass
+Export-ModuleMember -Function Sync-SkolniLoginHashToEntra
