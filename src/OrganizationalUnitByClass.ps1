@@ -1,5 +1,5 @@
 function Set-SkolniLoginOrganizationalUnitByClass {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
         [Parameter(ValueFromPipeline, Mandatory = $true)]
         $User,
@@ -41,15 +41,19 @@ function Set-SkolniLoginOrganizationalUnitByClass {
         if ($lowest -and $null -ne $lowest.DisplayName) {
             Write-Debug "Found class $($lowest.sAMAccountName) for user $($User.sAMAccountName)"
 
-            $ou = $null
-            $ou = Get-ADOrganizationalUnit -Identity "OU=$($lowest.SamAccountName),$TargetOU" -ErrorAction SilentlyContinue
+            $ouDn = "OU=$($lowest.SamAccountName),$TargetOU"
+            $ou = Get-ADOrganizationalUnit -Identity $ouDn -ErrorAction SilentlyContinue
             if ($null -eq $ou) {
-                Write-Debug "Organizational unit OU=$($lowest.SamAccountName),$TargetOU not found, creating..."
-                $ou = New-ADOrganizationalUnit -Name $lowest.SamAccountName -Path $TargetOU
+                Write-Debug "Organizational unit $ouDn not found, creating..."
+                if ($PSCmdlet.ShouldProcess($ouDn, "Create OrganizationalUnit")) {
+                    New-ADOrganizationalUnit -Name $lowest.SamAccountName -Path $TargetOU
+                }
             }
 
-            Write-Debug "Moving user $($User.DistinguishedName) to $($ou.DistinguishedName) OU"
-            Move-ADObject -Identity $User.DistinguishedName -TargetPath $ou.DistinguishedName
+            Write-Debug "Moving user $($User.DistinguishedName) to $ouDn"
+            if ($PSCmdlet.ShouldProcess($User.DistinguishedName, "Move to OU $ouDn")) {
+                Move-ADObject -Identity $User.DistinguishedName -TargetPath $ouDn
+            }
         }
     }
 }

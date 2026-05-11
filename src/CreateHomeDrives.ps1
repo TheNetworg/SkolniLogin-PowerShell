@@ -1,5 +1,5 @@
 function New-SkolniLoginHomeDrive {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
         [Parameter(ValueFromPipeline, Mandatory = $true)]
         $User,
@@ -26,31 +26,35 @@ function New-SkolniLoginHomeDrive {
             if ($directory) {
                 Write-Host "Directory $UserPath already exists, only adding it to the user's profile."
                 if ($adUser.HomeDrive -ne $Letter -and $adUser.HomeDirectory -ne $UserPath) {
-                    Set-ADUser -Identity $User.sAMAccountName -Replace @{HomeDirectory = $UserPath; HomeDrive = $Letter}
+                    if ($PSCmdlet.ShouldProcess($adUser.SamAccountName, "Set HomeDrive=$Letter HomeDirectory=$UserPath")) {
+                        Set-ADUser -Identity $User.sAMAccountName -Replace @{HomeDirectory = $UserPath; HomeDrive = $Letter}
+                    }
                 }
                 else {
                     Write-Debug "User already has correct attributes set. Skipping..."
                 }
             }
             else {
-                New-Item -ItemType Directory -Path $UserPath
+                if ($PSCmdlet.ShouldProcess($adUser.SamAccountName, "Create home drive at $UserPath and set HomeDrive=$Letter")) {
+                    New-Item -ItemType Directory -Path $UserPath
 
-                $Domain = Get-ADDomain
+                    $Domain = Get-ADDomain
 
-                $UsersAm = "$($Domain.NetBIOSName)\$($User.sAMAccountName)"
-                $FileSystemAccessRights = [System.Security.AccessControl.FileSystemRights]::FullControl
-                $InheritanceFlags = [System.Security.AccessControl.InheritanceFlags]::"ContainerInherit", "ObjectInherit"
-                $PropagationFlags = [System.Security.AccessControl.PropagationFlags]::None
-                $AccessControl = [System.Security.AccessControl.AccessControlType]::Allow 
-                $NewAccessrule = New-Object System.Security.AccessControl.FileSystemAccessRule `
-                ($UsersAm, $FileSystemAccessRights, $InheritanceFlags, $PropagationFlags, $AccessControl)
-        
-                $currentACL = Get-ACL -path $UserPath
-                $currentACL.SetOwner((New-Object System.Security.Principal.NTAccount($UsersAm)))
-                $currentACL.AddAccessRule($NewAccessrule)
-                Set-ACL -Path $UserPath -AclObject $currentACL
+                    $UsersAm = "$($Domain.NetBIOSName)\$($User.sAMAccountName)"
+                    $FileSystemAccessRights = [System.Security.AccessControl.FileSystemRights]::FullControl
+                    $InheritanceFlags = [System.Security.AccessControl.InheritanceFlags]::"ContainerInherit", "ObjectInherit"
+                    $PropagationFlags = [System.Security.AccessControl.PropagationFlags]::None
+                    $AccessControl = [System.Security.AccessControl.AccessControlType]::Allow
+                    $NewAccessrule = New-Object System.Security.AccessControl.FileSystemAccessRule `
+                    ($UsersAm, $FileSystemAccessRights, $InheritanceFlags, $PropagationFlags, $AccessControl)
 
-                Set-ADUser -Identity $User.sAMAccountName -Replace @{HomeDirectory = $UserPath; HomeDrive = $Letter}
+                    $currentACL = Get-ACL -path $UserPath
+                    $currentACL.SetOwner((New-Object System.Security.Principal.NTAccount($UsersAm)))
+                    $currentACL.AddAccessRule($NewAccessrule)
+                    Set-ACL -Path $UserPath -AclObject $currentACL
+
+                    Set-ADUser -Identity $User.sAMAccountName -Replace @{HomeDirectory = $UserPath; HomeDrive = $Letter}
+                }
             }
         }
     }
